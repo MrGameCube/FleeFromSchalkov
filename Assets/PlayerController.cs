@@ -8,15 +8,14 @@ public class PlayerController : MonoBehaviour
 {
     private Rigidbody2D _rigidbody2D;
     private BoxCollider2D _boxCollider2D;
-
     private Vector2 velocity;
+    private float angle;
+    private bool lockShooting = false;
 
     public Camera mainCamera;
-
-    private float angle;
-    
-    
     public float movementSpeed = 1.0f;
+    public GameObject projectilePrefab;
+    public float bulletSpeed = 10f;
     
     // Start is called before the first frame update
     void Start()
@@ -31,14 +30,35 @@ public class PlayerController : MonoBehaviour
         this.velocity = new Vector2(
             Input.GetAxis("Vertical") * movementSpeed, 
             Input.GetAxis("Horizontal") * movementSpeed) ;
+        
+        var shooting = Input.GetButton("Fire1");
+        
+        //for single shoot
+        if (shooting && !this.lockShooting)
+        {
+            this.Shoot();
+            this.lockShooting = true;
+        }
+        else if (!shooting)
+        {
+            this.lockShooting = false;
+        }
     }
 
     void FixedUpdate()
     {
         PointToMouse(this.transform);
         this._rigidbody2D.velocity = this.velocity[0] * (this.transform.up) + this.velocity[1] *this.transform.right;
-
     }
+
+    private void Shoot()
+    {
+        var projectileInstance = Instantiate(projectilePrefab, this.transform.position, Quaternion.identity);
+        var projectileRigidbody2D = projectileInstance.GetComponent<Rigidbody2D>();
+        projectileRigidbody2D.velocity = this.transform.up * bulletSpeed;
+        projectileRigidbody2D.rotation = this._rigidbody2D.rotation;
+    }
+    
     /**
      * Ganz sicher nicht von Medium geklaut!
      *  Zufall:
