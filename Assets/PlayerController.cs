@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor.TextCore.Text;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -27,14 +28,15 @@ public class PlayerController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        this.velocity = new Vector2(Input.GetAxis("Vertical") * movementSpeed, Input.GetAxis("Vertical") * movementSpeed) ;
+        this.velocity = new Vector2(
+            Input.GetAxis("Vertical") * movementSpeed, 
+            Input.GetAxis("Horizontal") * movementSpeed) ;
     }
 
     void FixedUpdate()
     {
         PointToMouse(this.transform);
-        // TODO: Das muss auch mal nach links und rechts oder so
-        this._rigidbody2D.velocity = this.velocity * (this.transform.up);
+        this._rigidbody2D.velocity = this.velocity[0] * (this.transform.up) + this.velocity[1] *this.transform.right;
 
     }
     /**
