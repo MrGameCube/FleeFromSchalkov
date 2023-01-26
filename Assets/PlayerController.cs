@@ -16,7 +16,7 @@ public class PlayerController : MonoBehaviour
     public float movementSpeed = 1.0f;
     public GameObject projectilePrefab;
     public float bulletSpeed = 10f;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -28,8 +28,8 @@ public class PlayerController : MonoBehaviour
     void Update()
     {
         this.velocity = new Vector2(
-            Input.GetAxis("Vertical") * movementSpeed, 
-            Input.GetAxis("Horizontal") * movementSpeed) ;
+            Input.GetAxis("Vertical"), 
+            Input.GetAxis("Horizontal")) ;
         
         var shooting = Input.GetButton("Fire1");
         
@@ -48,7 +48,7 @@ public class PlayerController : MonoBehaviour
     void FixedUpdate()
     {
         PointToMouse(this.transform);
-        this._rigidbody2D.velocity = this.velocity[0] * (this.transform.up) + this.velocity[1] *this.transform.right;
+        this._rigidbody2D.velocity = (this.velocity[0] * (this.transform.up) + this.velocity[1] * this.transform.right).normalized * this.movementSpeed;
     }
 
     private void Shoot()
